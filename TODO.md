@@ -34,13 +34,15 @@
 
 ### Problemy
 
-W jaki sposób chcemy stosować podane parametry wraz z rozkładami?\
+*W jaki sposób chcemy stosować podane parametry wraz z rozkładami?*\
 Wg mnie z góry ustalamy rozkład\
-Czy stają się wtedy parametrami rozkładu?\
+\
+*Czy stają się wtedy parametrami rozkładu?*\
 Tak\
-Czy może jednak stosujemy same współczynniki, które będą wtedy zwykłym prawdopodobieństwem 
-[0-1]? Nie wiem jaki dokładnie był pomysł z tymi parametrami\
-
+\
+*Czy może jednak stosujemy same współczynniki, które będą wtedy zwykłym prawdopodobieństwem 
+[0-1]? Nie wiem jaki dokładnie był pomysł z tymi parametrami*\
+\
 Ja mam taką wizję:
 każda iteracja to jeden dzień
 * Zgony / wyzdrowienia:
