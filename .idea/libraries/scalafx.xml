@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="scalafx" type="repository">
+    <properties maven-id="org.scalafx:scalafx_2.10:8.0.144-R12" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/scalafx/scalafx_2.10/8.0.144-R12/scalafx_2.10-8.0.144-R12.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.10.6/scala-library-2.10.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-reflect/2.10.6/scala-reflect-2.10.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
