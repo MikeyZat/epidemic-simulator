@@ -2,28 +2,35 @@ package simulation
 
 import java.util.concurrent.ThreadLocalRandom
 import scala.annotation.tailrec
+import scala.collection.parallel.CollectionConverters._
 
 case class SampledPatients(finished: Int, newInfections: Int)
 
 object SimulationService {
 
+  val N = 4
+
   private def getFinishedAndInfectedPatients(patientsCount: Int, diseaseEndProbability: Double, infectOthersProbability: Double): SampledPatients = {
-    getSampledData(
-      patientsCount,
+    val iterations = patientsCount / N
+    val sums = (1 to N).toList.par map {_ => getSampledData(
+      iterations,
       (u: Double, data: SampledPatients) => SampledPatients(
         if (u < diseaseEndProbability) data.finished + 1 else data.finished,
         if (u < infectOthersProbability) data.newInfections + 1 else data.newInfections
-    ),
+      ),
       SampledPatients(0, 0)
-    )
+    )}
+    sums.reduce((x, y) => SampledPatients(x.finished + y.finished, x.newInfections + y.newInfections))
   }
 
   private def getNewDeaths(sickPatientsCount: Int, mortalityRate: Double): Int = {
-    getSampledData(
-      sickPatientsCount,
+    val iterations = sickPatientsCount / N
+    val sums = (1 to N).toList.par map {_ => getSampledData(
+      iterations,
       (u: Double, deathsCount: Int) => if (u < mortalityRate) deathsCount + 1 else deathsCount,
       0
-    )
+    )}
+    sums.sum
   }
 
   @tailrec
