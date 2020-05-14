@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="sbt: org.openjfx:javafx-web:14.0.1:linux:jar">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/repo1.maven.org/maven2/org/openjfx/javafx-web/14.0.1/javafx-web-14.0.1-linux.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
