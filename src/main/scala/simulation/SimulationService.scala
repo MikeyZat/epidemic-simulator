@@ -5,16 +5,6 @@ import scala.annotation.tailrec
 import scala.math._
 import scala.collection.parallel.CollectionConverters._
 
-case class SampledPatients(deadOrRecoveredCount: Long, newInfectedCount: Long) {
-
-  def +(that: SampledPatients): SampledPatients = SampledPatients(
-    this.deadOrRecoveredCount + that.deadOrRecoveredCount,
-    this.newInfectedCount + that.newInfectedCount
-  )
-
-  def *(ratio: Double): SampledPatients = SampledPatients((this.deadOrRecoveredCount * ratio).toLong, (this.newInfectedCount * ratio).toLong)
-}
-
 object SimulationService {
   val MAX_SAMPLES = 1000000
   val N = 4
@@ -27,7 +17,7 @@ object SimulationService {
           batchSize,
           (u: Double, data: SampledPatients) => SampledPatients(
             if (u < diseaseEndProbability) data.deadOrRecoveredCount + 1 else data.deadOrRecoveredCount,
-            if (u < infectOthersProbability) data.newInfectedCount + 1 else data.newInfectedCount
+            if (u < infectOthersProbability) data.newInfectedCount + max(1, infectOthersProbability.toInt) else data.newInfectedCount
           ),
           SampledPatients(0, 0)
         )
