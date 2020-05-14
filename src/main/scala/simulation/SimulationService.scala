@@ -2,35 +2,58 @@ package simulation
 
 import java.util.concurrent.ThreadLocalRandom
 import scala.annotation.tailrec
+import scala.math._
 import scala.collection.parallel.CollectionConverters._
 
-case class SampledPatients(finished: Int, newInfections: Int)
+case class SampledPatients(deadOrRecoveredCount: Long, newInfectedCount: Long) {
+
+  def +(that: SampledPatients): SampledPatients = SampledPatients(
+    this.deadOrRecoveredCount + that.deadOrRecoveredCount,
+    this.newInfectedCount + that.newInfectedCount
+  )
+
+  def *(ratio: Double): SampledPatients = SampledPatients((this.deadOrRecoveredCount * ratio).toLong, (this.newInfectedCount * ratio).toLong)
+}
 
 object SimulationService {
-
+  val MAX_SAMPLES = 1000000
   val N = 4
 
-  private def getFinishedAndInfectedPatients(patientsCount: Int, diseaseEndProbability: Double, infectOthersProbability: Double): SampledPatients = {
-    val iterations = patientsCount / N
-    val sums = (1 to N).toList.par map {_ => getSampledData(
-      iterations,
-      (u: Double, data: SampledPatients) => SampledPatients(
-        if (u < diseaseEndProbability) data.finished + 1 else data.finished,
-        if (u < infectOthersProbability) data.newInfections + 1 else data.newInfections
-      ),
-      SampledPatients(0, 0)
-    )}
-    sums.reduce((x, y) => SampledPatients(x.finished + y.finished, x.newInfections + y.newInfections))
+
+  private def getFinishedAndInfectedPatients(patientsCount: Long, diseaseEndProbability: Double, infectOthersProbability: Double): SampledPatients = {
+    getScaledSampledData(patientsCount, (batchSize: Int, scaleRatio: Double) => {
+      val batches = (1 to N).toList.par map { _ =>
+        getSampledData(
+          batchSize,
+          (u: Double, data: SampledPatients) => SampledPatients(
+            if (u < diseaseEndProbability) data.deadOrRecoveredCount + 1 else data.deadOrRecoveredCount,
+            if (u < infectOthersProbability) data.newInfectedCount + 1 else data.newInfectedCount
+          ),
+          SampledPatients(0, 0)
+        )
+      }
+      batches.reduce(_ + _) * scaleRatio
+    })
   }
 
-  private def getNewDeaths(sickPatientsCount: Int, mortalityRate: Double): Int = {
-    val iterations = sickPatientsCount / N
-    val sums = (1 to N).toList.par map {_ => getSampledData(
-      iterations,
-      (u: Double, deathsCount: Int) => if (u < mortalityRate) deathsCount + 1 else deathsCount,
-      0
-    )}
-    sums.sum
+  private def getNewDeaths(sickPatientsCount: Long, mortalityRate: Double): Long = {
+    getScaledSampledData(sickPatientsCount, (batchSize: Int, scaleRatio: Double) => {
+      val batches = (1 to N).toList.par map { _ =>
+        getSampledData(
+          batchSize,
+          (u: Double, deathsCount: Int) => if (u < mortalityRate) deathsCount + 1 else deathsCount,
+          0
+        )
+      }
+      (batches.sum * scaleRatio).toLong
+    })
+  }
+
+  private def getScaledSampledData[T](iterations: Long, samplingFunction: (Int, Double) => T): T = {
+    val scaledIterations = min(iterations, MAX_SAMPLES)
+    val scaleRatio = max(iterations / MAX_SAMPLES, 1)
+    val batchSize = (scaledIterations / N).toInt
+    samplingFunction(batchSize, scaleRatio)
   }
 
   @tailrec
@@ -47,12 +70,15 @@ object SimulationService {
     }
   }
 
-  def getNewStats(sickPatientsCount: Int, epidemicParams: EpidemicParams): NextDayResults = {
+  def getNewDailyStatistics(sickPatientsCount: Int, epidemicParams: EpidemicParams): DailyStatistics = {
     val diseaseEndProbability: Double = 1.0 / epidemicParams.diseaseDuration
     val infectOthersProbability: Double = epidemicParams.incidenceRate / epidemicParams.diseaseDuration
     val sampledPatients: SampledPatients = getFinishedAndInfectedPatients(sickPatientsCount, diseaseEndProbability, infectOthersProbability)
-    val deaths: Int = getNewDeaths(sampledPatients.finished, epidemicParams.mortality)
-    NextDayResults(sampledPatients.newInfections, deaths, sampledPatients.finished - deaths)
+    val deaths: Long = getNewDeaths(sampledPatients.deadOrRecoveredCount, epidemicParams.mortality)
+    DailyStatistics(
+      dead = deaths,
+      recovered = sampledPatients.deadOrRecoveredCount - deaths,
+      infected = sampledPatients.newInfectedCount
+    )
   }
-
 }
