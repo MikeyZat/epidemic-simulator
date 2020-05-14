@@ -18,11 +18,12 @@ class PatientPointPainter (val state: PatientState) {
   var conditionSub: Subscription = _
   var dangerCircle: Circle = createDangerCircle()
   var timeline: Timeline = createTimeline(dangerCircle)
-  val finishAnimation: BooleanProperty = BooleanProperty(false);
+  val finishAnimation: BooleanProperty = BooleanProperty(true);
 
 
   private def createDangerCircle(): Circle = {
     val circle = new Circle()
+    circle.setVisible(false)
 
     circle.centerX = PatientPoint.dangerAreaRadius
     circle.centerY = PatientPoint.dangerAreaRadius
@@ -48,38 +49,34 @@ class PatientPointPainter (val state: PatientState) {
   private def createTimeline(circle: Circle): Timeline = {
     val checkForFinishFrame = KeyFrame(0 s, onFinished = () => {
       if (finishAnimation()) {
+        dangerCircle.setVisible(false)
         timeline.stop()
       }
     })
 
     new Timeline {
       cycleCount = Timeline.Indefinite
-      autoReverse = false
+      autoReverse = true
       keyFrames = Seq(
       checkForFinishFrame,
       at (0 s) {circle.radius -> 0d tween Interpolator.EaseIn},
       at (1 s) {circle.radius -> PatientPoint.dangerAreaRadius tween Interpolator.EaseIn},
-      at (2 s) {circle.radius -> 0d tween Interpolator.EaseIn},
       )
     }
   }
 
-  private def showDangerCircle(pane: Pane, circle: Circle) = {
+  private def showDangerCircle() = {
+    finishAnimation.value = false
+    dangerCircle.setVisible(true)
     timeline.status() match {
       case Status.STOPPED => {
-        pane.children.clear()
-        pane.children.addAll(dangerCircle, circle)
-        timeline.play()
+        timeline.playFromStart()
       }
       case Status.RUNNING =>
     }
   }
 
-  private def hideDangerCircle(pane: Pane) = {
-    timeline.onFinished = () => {
-      pane.children.remove(dangerCircle)
-      println(pane.children.length)
-    }
+  private def hideDangerCircle() = {
     finishAnimation.value = true
   }
 
@@ -93,21 +90,20 @@ class PatientPointPainter (val state: PatientState) {
     val circle = new Circle()
     circle.radius = PatientPoint.radius
     circle.fill = getPatientConditionColor(state.condition())
-    pane.children.add(circle)
+    pane.children.addAll(circle, dangerCircle)
 
-    if (state.condition() == PatientCondition.Sick)
-      showDangerCircle(pane, circle)
+    if (state.condition() == PatientCondition.Sick) {
+      showDangerCircle()
+    }
 
     conditionSub = state.condition.onChange {
       (_, _, newValue) =>
         circle.fill = getPatientConditionColor(newValue)
-//        pane.children.clear()
-//        pane.children.addOne(circle)
 
         if (newValue == PatientCondition.Sick) {
-          showDangerCircle(pane, circle)
+          showDangerCircle()
         } else {
-          hideDangerCircle(pane)
+          hideDangerCircle()
         }
     }
 
