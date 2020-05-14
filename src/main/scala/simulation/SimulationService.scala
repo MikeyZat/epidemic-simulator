@@ -8,36 +8,35 @@ case class SampledPatients(finished: Int, newInfections: Int)
 object SimulationService {
 
   private def getFinishedAndInfectedPatients(patientsCount: Int, diseaseEndProbability: Double, infectOthersProbability: Double): SampledPatients = {
-    getSampledPatients(patientsCount, 0, 0, diseaseEndProbability, infectOthersProbability)
-  }
-
-  @tailrec
-  private def getSampledPatients(iteration: Long, end_acc: Int, infect_acc: Int, end_prob: Double, infect_prob: Double): SampledPatients = {
-    if (iteration == 0)
-      SampledPatients(end_acc, infect_acc)
-    else {
-      val u = ThreadLocalRandom.current().nextDouble()
-      getSampledPatients(
-        iteration - 1,
-        if (u < end_prob) end_acc + 1 else end_acc,
-        if (u < infect_prob) infect_acc + 1 else infect_acc,
-        end_prob,
-        infect_prob
-      )
-    }
+    getSampledData(
+      patientsCount,
+      (u: Double, data: SampledPatients) => SampledPatients(
+        if (u < diseaseEndProbability) data.finished + 1 else data.finished,
+        if (u < infectOthersProbability) data.newInfections + 1 else data.newInfections
+    ),
+      SampledPatients(0, 0)
+    )
   }
 
   private def getNewDeaths(sickPatientsCount: Int, mortalityRate: Double): Int = {
-    getSampledDeaths(sickPatientsCount, 0, mortalityRate)
+    getSampledData(
+      sickPatientsCount,
+      (u: Double, deathsCount: Int) => if (u < mortalityRate) deathsCount + 1 else deathsCount,
+      0
+    )
   }
 
   @tailrec
-  private def getSampledDeaths(iteration: Long, deaths_acc: Int, death_prob: Double): Int = {
+  private def getSampledData[T](iteration: Long, updateFunction: (Double, T) => T, data: T): T = {
     if (iteration == 0)
-      deaths_acc
+      data
     else {
       val u = ThreadLocalRandom.current().nextDouble()
-      getSampledDeaths(iteration - 1, if (u < death_prob) deaths_acc + 1 else deaths_acc, death_prob)
+      getSampledData(
+        iteration - 1,
+        updateFunction,
+        updateFunction(u, data)
+      )
     }
   }
 
