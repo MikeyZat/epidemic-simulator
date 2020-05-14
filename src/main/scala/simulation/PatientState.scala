@@ -1,6 +1,6 @@
 package simulation
 
-import scalafx.beans.property.{IntegerProperty, ObjectProperty}
+import scalafx.beans.property.{DoubleProperty, IntegerProperty, ObjectProperty}
 import simulation.PatientCondition.PatientCondition
 
 // this is the class where we want to keep all patient state
@@ -8,8 +8,8 @@ import simulation.PatientCondition.PatientCondition
 // all simulation action should be propagated via patient state
 // example of properties: patient condition (healthy, sick, dead, recovered), position,
 class PatientState(xPos: Int, yPos: Int, startCondition: PatientCondition) {
-  val x: IntegerProperty = IntegerProperty(xPos)
-  val y: IntegerProperty = IntegerProperty(yPos)
+  val x: DoubleProperty = DoubleProperty(xPos)
+  val y: DoubleProperty = DoubleProperty(yPos)
   val condition: ObjectProperty[PatientCondition] = new ObjectProperty[PatientCondition](this, "condition", startCondition)
 
 }
