@@ -45,9 +45,9 @@ Tak\
 \
 Ja mam taką wizję:
 każda iteracja to jeden dzień
-* Zgony / wyzdrowienia:
+~~* Zgony / wyzdrowienia:
     - prawdopodobieństwo na to, że osoba danego dnia wyzdrowieje/umrze wynosi 1/{średni czas trwania choroby}, próbkując z tym parametrem dostajemy liczbę osób, które albo wyzdrowieją albo umrą
-    - z tych osób z prawdopodobieństwem {współczynnik śmiertelności}/100 próbkujemy ilość osób które zmarły. Reszta wyzdrowiała.
+    - z tych osób z prawdopodobieństwem {współczynnik śmiertelności}/100 próbkujemy ilość osób które zmarły. Reszta wyzdrowiała.~~ **Done**
 * Zarażanie:
     - dana osoba w ciągu jednego dnia zaraża kogoś z prawdopodobieństwem {współczynnik zarażenia} / {średni czas trwania choroby}, próbkujemy to z osób aktualnie zarażonych i mamy liczbę nowych zarażonych
 
