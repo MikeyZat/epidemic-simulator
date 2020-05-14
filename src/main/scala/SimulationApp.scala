@@ -7,31 +7,17 @@ import scalafx.scene.layout.HBox
 import scalafx.scene.paint.Color._
 import scalafx.scene.paint.{LinearGradient, Stops}
 import scalafx.scene.text.Text
-import simulation.{PatientCondition, PatientState}
+import simulation.Simulator
 import ui.{PatientPointsManager, SimulationBoardScene}
-
-
-object MockPatientStates {
-
-  private val rand = scala.util.Random
-
-  private def getRandom(to: Int): Int = rand.nextInt(to)
-
-
-  def patients(): List[PatientState] = (1 to 1000).map(_ =>
-    new PatientState(
-      getRandom(800),
-      getRandom(600),
-      rand.shuffle(PatientCondition.values.toList).head)
-  ).toList
-}
 
 object SimulationApp extends JFXApp {
 
   val WIDTH = 800
   val HEIGHT = 800
 
-  val patientManager: PatientPointsManager = new PatientPointsManager().addPoints(MockPatientStates.patients())
+  val simulator = new Simulator(10000, 10, 3.0, 0.1, 7)
+
+  val patientManager: PatientPointsManager = new PatientPointsManager().addPoints(simulator.patients)
 
   stage = new PrimaryStage {
     title = "Epidemic Simulator"
