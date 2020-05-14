@@ -18,16 +18,12 @@ object MockPatientStates {
   private def getRandom(to: Int): Int = rand.nextInt(to)
 
 
-  def patients(): List[PatientState] = List(
-    new PatientState(getRandom(800), getRandom(600), rand.shuffle(PatientCondition.values.toList).head),
-    new PatientState(getRandom(800), getRandom(600), rand.shuffle(PatientCondition.values.toList).head),
-    new PatientState(getRandom(800), getRandom(600), rand.shuffle(PatientCondition.values.toList).head),
-    new PatientState(getRandom(800), getRandom(600), rand.shuffle(PatientCondition.values.toList).head),
-    new PatientState(getRandom(800), getRandom(600), rand.shuffle(PatientCondition.values.toList).head),
-    new PatientState(getRandom(800), getRandom(600), rand.shuffle(PatientCondition.values.toList).head),
-  )
-
-
+  def patients(): List[PatientState] = (1 to 1000).map(_ =>
+    new PatientState(
+      getRandom(800),
+      getRandom(600),
+      rand.shuffle(PatientCondition.values.toList).head)
+  ).toList
 }
 
 object SimulationApp extends JFXApp {
