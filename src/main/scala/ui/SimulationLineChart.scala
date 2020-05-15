@@ -2,33 +2,30 @@ package ui
 
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.chart.{LineChart, NumberAxis, XYChart}
+import javafx.scene.chart.XYChart.Data
 
+
+// default series colors
+// 1 - green
+// 2 - red
+// 3 - white
+// 4 - gray
+// series param -> sequence of tuples containing series name and observable buffer of data points
 object SimulationLineChart  {
 
-  def apply(series: Map[String, Seq[(Int, Int)]]): LineChart[Number, Number] = {
+  def apply(title: String, series: Seq[(String, ObservableBuffer[Data[Number, Number]])]): LineChart[Number, Number] = {
     val xAxis = NumberAxis()
-    xAxis.label = "Days since epidemia has begun"
+    xAxis.label = title
     val yAxis = NumberAxis()
     val chart = LineChart(xAxis, yAxis)
 
-    val data = ObservableBuffer(Seq(
-      (1, 23),
-      (2, 14),
-      (3, 15),
-      (4, 24),
-      (5, 34),
-      (6, 36),
-      (7, 22),
-      (8, 45),
-      (9, 43),
-      (10, 17),
-      (11, 29),
-      (12, 25)
-    ) map {case (x, y) => XYChart.Data[Number, Number](x, y)})
+    series foreach {
+      case (name, buffer) =>
+        val s = XYChart.Series[Number, Number](name, buffer)
+        chart.getData.add(s)
+    }
 
-    val series = XYChart.Series[Number, Number]("test", data)
     chart.lookup(".default-color0.chart-symbol")
-    chart.getData.add(series)
     chart
   }
 

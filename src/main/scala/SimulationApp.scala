@@ -20,8 +20,8 @@ object MockPatientStates {
 
   def patients(): List[PatientState] = (1 to 1000).map(_ =>
     new PatientState(
-      getRandom(500),
-      getRandom(500),
+      getRandom(400),
+      getRandom(400),
       rand.shuffle(PatientCondition.values.toList).head)
   ).toList
 }
@@ -29,7 +29,7 @@ object MockPatientStates {
 object SimulationApp extends JFXApp {
 
   val WIDTH = 1200
-  val HEIGHT = 800
+  val HEIGHT = 900
 
   val patientManager: PatientPointsManager = new PatientPointsManager().addPoints(MockPatientStates.patients())
 

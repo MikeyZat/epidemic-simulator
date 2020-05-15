@@ -114,5 +114,5 @@ class PatientPointPainter (val state: PatientState) {
 
 object PatientPoint {
   val radius: Int = 3
-  val dangerAreaRadius: Double = 50
+  val dangerAreaRadius: Double = 25
 }
