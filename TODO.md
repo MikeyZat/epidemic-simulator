@@ -47,10 +47,11 @@ Ja mam taką wizję:
 każda iteracja to jeden dzień
 ~~* Zgony / wyzdrowienia:
     - prawdopodobieństwo na to, że osoba danego dnia wyzdrowieje/umrze wynosi 1/{średni czas trwania choroby}, próbkując z tym parametrem dostajemy liczbę osób, które albo wyzdrowieją albo umrą
-    - z tych osób z prawdopodobieństwem {współczynnik śmiertelności}/100 próbkujemy ilość osób które zmarły. Reszta wyzdrowiała.~~ **Done**
-* Zarażanie:
-    - dana osoba w ciągu jednego dnia zaraża kogoś z prawdopodobieństwem {współczynnik zarażenia} / {średni czas trwania choroby}, próbkujemy to z osób aktualnie zarażonych i mamy liczbę nowych zarażonych
+    - z tych osób z prawdopodobieństwem {współczynnik śmiertelności}/100 próbkujemy ilość osób które zmarły. Reszta wyzdrowiała.~~ **Done**\
+~~* Zarażanie:
+    - dana osoba w ciągu jednego dnia zaraża kogoś z prawdopodobieństwem {współczynnik zarażenia} / {średni czas trwania choroby}, próbkujemy to z osób aktualnie zarażonych i mamy liczbę nowych zarażonych~~
 
-Każdego dnia od całej populacji odejmujemy liczbę zgonów + wyzdrowiałych - tylko w ten sposób będzie można będzie zaobserwować zakończenie epidemii
+~~Każdego dnia od całej populacji odejmujemy liczbę zgonów + wyzdrowiałych - tylko w ten sposób będzie można będzie zaobserwować zakończenie epidemii~~
 
-Próbkowanie można zrobić jakimś scalowskim Monte Carlo, dzięki temu, że będziemy próbkować tylko na liczbie zarażonych to powinno działać dość szybko
+~~Próbkowanie można zrobić jakimś scalowskim Monte Carlo, dzięki temu, że będziemy próbkować tylko na liczbie zarażonych to powinno działać dość szybko~~
+**Done**

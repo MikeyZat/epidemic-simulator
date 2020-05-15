@@ -60,7 +60,7 @@ object SimulationService {
     }
   }
 
-  def getNewDailyStatistics(sickPatientsCount: Int, epidemicParams: EpidemicParams): DailyStatistics = {
+  def getNewDailyStatistics(sickPatientsCount: Long, epidemicParams: EpidemicParams): DailyStatistics = {
     val diseaseEndProbability: Double = 1.0 / epidemicParams.diseaseDuration
     val infectOthersProbability: Double = epidemicParams.incidenceRate / epidemicParams.diseaseDuration
     val sampledPatients: SampledPatients = getFinishedAndInfectedPatients(sickPatientsCount, diseaseEndProbability, infectOthersProbability)
