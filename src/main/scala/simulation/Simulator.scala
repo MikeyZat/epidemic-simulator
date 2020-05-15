@@ -12,7 +12,7 @@ class Simulator(
                  HEIGHT: Int = 800, WIDTH: Int = 800,
                  N: Int = 1000
                ) {
-  val scaleRatio: Double = population / N
+  val scaleRatio: Double = N.toDouble / population.toDouble
 
   val patients: List[PatientState] = (1 to N).map(_ =>
     new PatientState(
@@ -22,7 +22,9 @@ class Simulator(
   ).toList
 
   // init sick patients
-  patients.slice(0, (initSick* scaleRatio).toInt).foreach((p: PatientState) => p.condition.value = PatientCondition.Sick)
+  patients.slice(0, (initSick * scaleRatio).toInt) foreach {
+    (p: PatientState) => p.condition.value = PatientCondition.Sick
+  }
 
   val epidemicParams: EpidemicParams = EpidemicParams(incidenceRate, mortality, diseaseDuration)
 
@@ -31,16 +33,18 @@ class Simulator(
   var totalStats: TotalStatistics = TotalStatistics(population - initSick, 0, 0, initSick)
 
   private def setPatientValues(list: List[PatientState], from: Int, to: Int, newValue: PatientCondition): Unit = {
-    list.slice(from, to).foreach((p: PatientState) => p.condition.value = newValue)
+    list.slice(from, to) foreach { p => p.condition.value = newValue }
   }
 
   private def updatePatients(): Unit = {
-    val healthyPatients = this.patients.filter((p: PatientState) => p.condition() == PatientCondition.Healthy)
-    val sickPatients = this.patients.filter((p: PatientState) => p.condition() == PatientCondition.Sick)
+    val healthyPatients = this.patients filter { p => p.condition() == PatientCondition.Healthy }
+    val sickPatients = this.patients filter { p => p.condition() == PatientCondition.Sick }
+    val alreadyDead = this.patients count{ p => p.condition() == PatientCondition.Dead }
+    val alreadyRecovered = this.patients count { p => p.condition() == PatientCondition.Recovered }
 
-    val newDeaths = (this.dailyStats.dead * scaleRatio).toInt
-    val newRecoveries = (this.dailyStats.recovered * scaleRatio).toInt
-    val newInfections = (this.dailyStats.infected * scaleRatio).toInt
+    val newDeaths = (this.totalStats.dead * scaleRatio).toInt - alreadyDead
+    val newRecoveries = (this.totalStats.recovered * scaleRatio).toInt - alreadyRecovered
+    val newInfections = (this.totalStats.infected * scaleRatio).toInt - sickPatients.length
 
     setPatientValues(sickPatients, 0, newDeaths, PatientCondition.Dead)
     setPatientValues(sickPatients, newDeaths, newDeaths + newRecoveries, PatientCondition.Recovered)
