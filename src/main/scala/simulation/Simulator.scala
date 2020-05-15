@@ -1,6 +1,7 @@
 package simulation
 
 import simulation.PatientCondition.PatientCondition
+import scala.math.min
 
 class Simulator(
                  population: Long,
@@ -56,7 +57,8 @@ class Simulator(
   }
 
   def simulateDay(): Unit = {
-    this.dailyStats = SimulationService.getNewDailyStatistics(totalStats.infected, epidemicParams)
+    val newDailyStats: DailyStatistics = SimulationService.getNewDailyStatistics(totalStats.infected, epidemicParams)
+    this.dailyStats = DailyStatistics(newDailyStats.dead, newDailyStats.recovered, min(newDailyStats.infected, totalStats.healthy))
     this.updateTotalStats()
     this.updatePatients()
   }
