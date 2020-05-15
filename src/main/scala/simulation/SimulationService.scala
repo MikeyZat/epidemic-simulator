@@ -60,9 +60,18 @@ object SimulationService {
     }
   }
 
-  def getNewDailyStatistics(sickPatientsCount: Long, epidemicParams: EpidemicParams): DailyStatistics = {
+  private def getReducedInfectionProbability(probability: Double, sickToHealthyRate: Double, parametricFunction: Double => Double): Double = {
+     probability * (1 - parametricFunction(sickToHealthyRate))
+  }
+
+  def getNewDailyStatistics(sickPatientsCount: Long, healthyPeopleCount: Long, epidemicParams: EpidemicParams): DailyStatistics = {
+    val sickToHealthyRate: Double = sickPatientsCount.toDouble / healthyPeopleCount
     val diseaseEndProbability: Double = 1.0 / epidemicParams.diseaseDuration
-    val infectOthersProbability: Double = epidemicParams.incidenceRate / epidemicParams.diseaseDuration
+    val infectOthersProbability: Double = getReducedInfectionProbability(
+      probability = epidemicParams.incidenceRate / epidemicParams.diseaseDuration,
+      sickToHealthyRate = sickToHealthyRate,
+      parametricFunction = (x: Double) => (-exp(-x)) + 1.0
+    )
     val sampledPatients: SampledPatients = getFinishedAndInfectedPatients(sickPatientsCount, diseaseEndProbability, infectOthersProbability)
     val deaths: Long = getNewDeaths(sampledPatients.deadOrRecoveredCount, epidemicParams.mortality)
     DailyStatistics(

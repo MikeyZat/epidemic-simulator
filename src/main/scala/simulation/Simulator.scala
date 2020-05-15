@@ -12,7 +12,7 @@ class Simulator(
                  HEIGHT: Int = 800, WIDTH: Int = 800,
                  N: Int = 1000
                ) {
-  val scaleRatio: Double = N.toDouble / population.toDouble
+  val scaleRatio: Double = N.toDouble / population
 
   val patients: List[PatientState] = (1 to N).map(_ =>
     new PatientState(
@@ -61,7 +61,11 @@ class Simulator(
   }
 
   def simulateDay(): Unit = {
-    val newDailyStats: DailyStatistics = SimulationService.getNewDailyStatistics(this.totalStats.infected, epidemicParams)
+    val newDailyStats: DailyStatistics = SimulationService.getNewDailyStatistics(
+      sickPatientsCount = this.totalStats.infected,
+      healthyPeopleCount = this.totalStats.healthy,
+      epidemicParams = epidemicParams
+    )
     this.dailyStats = DailyStatistics(newDailyStats.dead, newDailyStats.recovered, min(newDailyStats.infected, totalStats.healthy))
     this.updateTotalStats()
     this.updatePatients()
