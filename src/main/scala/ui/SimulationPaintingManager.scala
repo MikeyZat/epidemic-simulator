@@ -5,7 +5,7 @@ import scalafx.animation.AnimationTimer
 import scalafx.collections.ObservableBuffer
 import simulation.{DailyStatistics, Simulator, TotalStatistics}
 
-class PatientPointsManager private(
+class SimulationPaintingManager private(
   val simulator: Simulator,
   val dailyChartSequence: Seq[(String, ObservableBuffer[XYChart.Data[Number, Number]])],
   val totalChartSequence: Seq[(String, ObservableBuffer[XYChart.Data[Number, Number]])],
@@ -18,7 +18,7 @@ class PatientPointsManager private(
   val animTimer = AnimationTimer(t => {
     if (lastTime > 0) {
       val delta = (t - lastTime) / 1e9
-      if (delta > PatientPointsManager.delta) {
+      if (delta > SimulationPaintingManager.delta) {
         simulateDay()
         lastTime = t
       }
@@ -69,9 +69,9 @@ class PatientPointsManager private(
 }
 
 
-object PatientPointsManager {
+object SimulationPaintingManager {
 
-  def apply(simulator: Simulator): PatientPointsManager = {
+  def apply(simulator: Simulator): SimulationPaintingManager = {
     simulator.simulateDay()
 
     val dailyStatistics = simulator.dailyStats
@@ -108,8 +108,8 @@ object PatientPointsManager {
       ("Dead", deadTotal.toInt)
     ))
 
-    new PatientPointsManager(simulator, dailyChartSequence, totalChartSequence, totalPieChart)
+    new SimulationPaintingManager(simulator, dailyChartSequence, totalChartSequence, totalPieChart)
   }
 
-  val delta: Long = 3
+  val delta: Long = 1
 }

@@ -1,7 +1,7 @@
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import simulation.Simulator
-import ui.{PatientPointsManager, SimulationBoardScene}
+import ui.{SimulationPaintingManager, SimulationBoardScene}
 
 object SimulationApp extends JFXApp {
 
@@ -18,12 +18,12 @@ object SimulationApp extends JFXApp {
     WIDTH = 400
   )
 
-  val patientManager: PatientPointsManager = PatientPointsManager(simulator)
+  val paintingManager: SimulationPaintingManager = SimulationPaintingManager(simulator)
 
   stage = new PrimaryStage {
     title = "Epidemic Simulator"
     width = WIDTH
     height = HEIGHT
-    scene = new SimulationBoardScene(patientManager)
+    scene = new SimulationBoardScene(paintingManager)
   }
 }
