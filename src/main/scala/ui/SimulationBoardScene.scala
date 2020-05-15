@@ -11,7 +11,7 @@ class SimulationBoardScene(val patientPointsManager: PatientPointsManager) exten
   val boardPane = new BorderPane
   val pointsPane = new Pane
   patientPointsManager.simulator.patients
-      .map(p => new PatientPointPainter(p))
+    .map(p => new PatientPointPainter(p))
     .map(p => p.paint())
     .foreach(p => pointsPane.children.add(p))
 
@@ -28,18 +28,17 @@ class SimulationBoardScene(val patientPointsManager: PatientPointsManager) exten
     spacing = 100
     padding = Insets(top = 30, bottom = 30, left = 50, right = 50)
   }
-  val lineChart = SimulationLineChart("Epidemia growth per day", patientPointsManager.dailyChartSequence)
-  val lineChartTwo = SimulationLineChart("Total cases worldwide", patientPointsManager.totalChartSequence)
-  val pieChart = SimulationPieChart("Total of all", patientPointsManager.totalPieChart)
+  val dailyChart = SimulationLineChart("Daily cases", patientPointsManager.dailyChartSequence)
+  val totalChart = SimulationLineChart("Total cases", patientPointsManager.totalChartSequence)
+  val proportionChart = SimulationPieChart("Total cases proportions", patientPointsManager.totalPieChart)
 
   chartBox.children.addAll(
-    pieChart,
-    lineChart,
+    proportionChart,
+    dailyChart,
   )
   visualizationBox.children.addAll(
     pointsPane,
-    lineChartTwo
-
+    totalChart
   )
 
   boardPane.left = visualizationBox

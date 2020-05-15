@@ -28,10 +28,4 @@ object SimulationLineChart  {
     chart.lookup(".default-color0.chart-symbol")
     chart
   }
-
-
-
-
-
-
 }
