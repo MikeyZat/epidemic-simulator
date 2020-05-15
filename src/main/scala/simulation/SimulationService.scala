@@ -41,7 +41,7 @@ object SimulationService {
 
   private def getScaledSampledData[T](iterations: Long, samplingFunction: (Int, Double) => T): T = {
     val scaledIterations = min(iterations, MAX_SAMPLES)
-    val scaleRatio = max(iterations / MAX_SAMPLES, 1)
+    val scaleRatio: Double = max(iterations / MAX_SAMPLES.toDouble, 1.0)
     val batchSize = (scaledIterations / N).toInt
     samplingFunction(batchSize, scaleRatio)
   }

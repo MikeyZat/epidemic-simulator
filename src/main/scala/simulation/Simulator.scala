@@ -61,7 +61,7 @@ class Simulator(
   }
 
   def simulateDay(): Unit = {
-    val newDailyStats: DailyStatistics = SimulationService.getNewDailyStatistics(totalStats.infected, epidemicParams)
+    val newDailyStats: DailyStatistics = SimulationService.getNewDailyStatistics(this.totalStats.infected, epidemicParams)
     this.dailyStats = DailyStatistics(newDailyStats.dead, newDailyStats.recovered, min(newDailyStats.infected, totalStats.healthy))
     this.updateTotalStats()
     this.updatePatients()
