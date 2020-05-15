@@ -1,0 +1,52 @@
+
+.chart-plot-background { -fx-background-color: black; }
+
+
+/*LINE CHART*/
+.default-color0.chart-series-line { -fx-stroke: green; }
+.default-color1.chart-series-line { -fx-stroke: red }
+.default-color2.chart-series-line { -fx-stroke: white; }
+.default-color3.chart-series-line { -fx-stroke: gray; }
+
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: none;
+}
+.default-color1.chart-line-symbol {
+    -fx-background-color: none;
+}
+.default-color2.chart-line-symbol {
+    -fx-background-color: none;
+}
+.default-color3.chart-line-symbol {
+    -fx-background-color: none;
+}
+
+/*PIE CHART*/
+
+.data0.chart-pie { -fx-pie-color: green; }
+.data1.chart-pie { -fx-pie-color: red; }
+.data2.chart-pie { -fx-pie-color: white; }
+.data3.chart-pie { -fx-pie-color: gray; }
+
+
+
+
+/* LEGEND */
+
+.chart-legend {
+    -fx-background-color: black;
+}
+
+.default-color0.chart-legend-item-symbol {
+    -fx-background-color: green;
+}
+.default-color1.chart-legend-item-symbol {
+    -fx-background-color: red;
+}
+.default-color2.chart-legend-item-symbol {
+    -fx-background-color: white;
+}
+.default-color3.chart-legend-item-symbol {
+    -fx-background-color: gray;
+}
