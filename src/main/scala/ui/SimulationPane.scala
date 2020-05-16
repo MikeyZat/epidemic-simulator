@@ -6,9 +6,6 @@ import scalafx.scene.layout.{BorderPane, Pane, VBox}
 import simulation.Simulator
 
 class SimulationPane(population: Long, initSick: Int, incidenceRate: Double, mortality: Double, diseaseDuration: Int) extends Pane {
-
-  println(population, initSick, incidenceRate, mortality, diseaseDuration)
-
   val simulator = new Simulator(
     population = population,
     initSick = initSick,

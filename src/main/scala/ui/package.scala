@@ -13,27 +13,27 @@ package object ui {
   }
 
 
-  def createLineChartDataBuffer(series: Seq[(Int, Int)]): ObservableBuffer[XYChart.Data[Number, Number]] = {
+  def createLineChartDataBuffer(series: Seq[(Long, Long)]): ObservableBuffer[XYChart.Data[Number, Number]] = {
     val data = series map {
       case (x, y) => new XYChart.Data[Number, Number](x, y)
     }
     ObservableBuffer(data)
   }
 
-  def addPointToLineChartDataBuffer(buffer: ObservableBuffer[XYChart.Data[Number, Number]], point: (Int, Int)): ObservableBuffer[XYChart.Data[Number, Number]] = {
+  def addPointToLineChartDataBuffer(buffer: ObservableBuffer[XYChart.Data[Number, Number]], point: (Long, Long)): ObservableBuffer[XYChart.Data[Number, Number]] = {
     val (x, y) = point
     buffer.add(new XYChart.Data[Number, Number](x, y))
     buffer
   }
 
-  def createPieChartDataBuffer(series: Seq[(String, Int)]): ObservableBuffer[PieChart.Data] = {
+  def createPieChartDataBuffer(series: Seq[(String, Long)]): ObservableBuffer[PieChart.Data] = {
     val data = series map {
       case (name, value) => new PieChart.Data(name, value)
     }
     ObservableBuffer(data)
   }
 
-  def updatePieChartDataBuffer(buffer: ObservableBuffer[PieChart.Data], updatedSeries: Seq[(String, Int)]): ObservableBuffer[PieChart.Data] = {
+  def updatePieChartDataBuffer(buffer: ObservableBuffer[PieChart.Data], updatedSeries: Seq[(String, Long)]): ObservableBuffer[PieChart.Data] = {
     updatedSeries foreach {
       case (name, value) =>
         buffer.find(p => p.getName == name) match {

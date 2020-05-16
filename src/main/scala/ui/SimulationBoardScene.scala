@@ -1,6 +1,6 @@
 package ui
 
-import scalafx.beans.property.{DoubleProperty, IntegerProperty}
+import scalafx.beans.property.{DoubleProperty, IntegerProperty, LongProperty}
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, Label, TextField, TextFormatter}
@@ -12,7 +12,7 @@ class SimulationBoardScene() extends Scene {
   fill = Black
   stylesheets.add("line_chart.css")
 
-  val population: IntegerProperty = IntegerProperty(0)
+  val population: LongProperty = LongProperty(0)
   val initSick: IntegerProperty = IntegerProperty(0)
   val incidenceRate: DoubleProperty = DoubleProperty(0)
   val mortality: DoubleProperty = DoubleProperty(0)
@@ -37,7 +37,7 @@ class SimulationBoardScene() extends Scene {
   val populationField = new TextField {
     textFormatter = new TextFormatter(integerFilter)
     text.onChange((_, _, newValue) => {
-      population.value = util.Try(newValue.toInt).getOrElse(0)
+      population.value = util.Try(newValue.toLong).getOrElse(0L)
     })
     promptText = "Population"
     maxWidth = 200
