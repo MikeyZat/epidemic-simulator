@@ -39,29 +39,29 @@ class SimulationPaintingManager private(
 
     dailyChartSequence foreach {
       case ("Recovered", recoveredDailyBuffer) =>
-        addPointToLineChartDataBuffer(recoveredDailyBuffer, (currentDay, recovered.toInt))
+        addPointToLineChartDataBuffer(recoveredDailyBuffer, (currentDay, recovered))
       case ("Infected",infectedDailyBuffer) =>
-        addPointToLineChartDataBuffer(infectedDailyBuffer, (currentDay, infected.toInt))
+        addPointToLineChartDataBuffer(infectedDailyBuffer, (currentDay, infected))
       case ("Dead", deadDailyBuffer) =>
-        addPointToLineChartDataBuffer(deadDailyBuffer, (currentDay, dead.toInt))
+        addPointToLineChartDataBuffer(deadDailyBuffer, (currentDay, dead))
     }
 
     totalChartSequence foreach {
       case ("Healthy", healthyTotalBuffer) =>
-        addPointToLineChartDataBuffer(healthyTotalBuffer, (currentDay, healthyTotal.toInt))
+        addPointToLineChartDataBuffer(healthyTotalBuffer, (currentDay, healthyTotal))
       case ("Infected", infectedTotalBuffer) =>
-      addPointToLineChartDataBuffer(infectedTotalBuffer, (currentDay, infectedTotal.toInt))
+      addPointToLineChartDataBuffer(infectedTotalBuffer, (currentDay, infectedTotal))
       case ("Recovered", recoveredTotalBuffer) =>
-        addPointToLineChartDataBuffer(recoveredTotalBuffer, (currentDay, recoveredTotal.toInt))
+        addPointToLineChartDataBuffer(recoveredTotalBuffer, (currentDay, recoveredTotal))
       case ("Dead", deadTotalBuffer) =>
-        addPointToLineChartDataBuffer(deadTotalBuffer, (currentDay, deadTotal.toInt))
+        addPointToLineChartDataBuffer(deadTotalBuffer, (currentDay, deadTotal))
     }
 
     updatePieChartDataBuffer(totalPieChart, Seq(
-      ("Healthy", healthyTotal.toInt),
-      ("Infected", infectedTotal.toInt),
-      ("Recovered", recoveredTotal.toInt),
-      ("Dead", deadTotal.toInt)
+      ("Healthy", healthyTotal),
+      ("Infected", infectedTotal),
+      ("Recovered", recoveredTotal),
+      ("Dead", deadTotal)
     ))
 
     currentDay += 1
@@ -79,7 +79,7 @@ object SimulationPaintingManager {
 
     val DailyStatistics(dead, recovered, infected) = dailyStatistics
     val Seq(recoveredDailyBuffer, deadDailyBuffer, infectedDailyBuffer) = Seq(recovered, dead, infected) map {
-      value: Long => createLineChartDataBuffer(Seq((0, value.toInt)))
+      value: Long => createLineChartDataBuffer(Seq((0L, value)))
     }
 
     val dailyChartSequence = Seq(
@@ -91,7 +91,7 @@ object SimulationPaintingManager {
     val TotalStatistics(healthyTotal, deadTotal, recoveredTotal, infectedTotal) = totalStatistics
 
     val Seq(healthyTotalBuffer, infectedTotalBuffer, recoveredTotalBuffer, deadTotalBuffer) = Seq(healthyTotal, infectedTotal, recoveredTotal, deadTotal) map {
-      value: Long => createLineChartDataBuffer(Seq((0, value.toInt)))
+      value: Long => createLineChartDataBuffer(Seq((0L, value)))
     }
 
     val totalChartSequence = Seq(
@@ -102,10 +102,10 @@ object SimulationPaintingManager {
     )
 
     val totalPieChart  = createPieChartDataBuffer(Seq(
-      ("Healthy", healthyTotal.toInt),
-      ("Infected", infectedTotal.toInt),
-      ("Recovered", recoveredTotal.toInt),
-      ("Dead", deadTotal.toInt)
+      ("Healthy", healthyTotal),
+      ("Infected", infectedTotal),
+      ("Recovered", recoveredTotal),
+      ("Dead", deadTotal)
     ))
 
     new SimulationPaintingManager(simulator, dailyChartSequence, totalChartSequence, totalPieChart)
