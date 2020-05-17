@@ -1,3 +1,6 @@
+<p align="center">  
+  <img src="./demo.gif"/>
+</p>
 <h1 align="center">
   Epidemic Simulator
 </h1>
